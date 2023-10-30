@@ -24,17 +24,14 @@ class AuthController extends Controller
     public function register(AuthRegisterRequest $request)
     {
         try {
-            DB::beginTransaction();
             $user = $this->userService->register($request);
-            DB::commit();
             return response()->json([
                 'email' => $user['email'],
                 'access_token' => $user['token'],
                 'token_type' => 'Bearer',
-            ]);
+            ], 200);
         } catch (\Throwable $th) {
-            DB::rollBack();
-            return response()->json(['error' => $th]);
+            return response()->json(['error' => $th], 500);
         }
 
     }

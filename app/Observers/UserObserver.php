@@ -2,7 +2,9 @@
 
 namespace App\Observers;
 
+use App\Mail\RegistrationConfirmed;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Ramsey\Uuid\Uuid;
 
 class UserObserver
@@ -21,7 +23,7 @@ class UserObserver
      */
     public function created(User $user)
     {
-        //
+        Mail::to($user)->send(new RegistrationConfirmed($user));
     }
 
     /**
