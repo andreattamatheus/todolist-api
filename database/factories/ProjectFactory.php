@@ -20,9 +20,7 @@ class ProjectFactory extends Factory
             'name' => $this->faker->company,
             'color' => $this->faker->hexColor,
             'favorite' => $this->faker->boolean(50), // 50% chance of being true or false
-            'user_id' => function() {
-                return User::inRandomOrder()->first()->id ?? User::factory()->create()->id;
-            },
+            'user_id' => '375defa7-54d9-49c3-9c71-18104d774963',
         ];
     }
 }

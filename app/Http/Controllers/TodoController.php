@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Todo;
+use App\Repositories\TodoRepository;
 use Illuminate\Http\Request;
 
 class TodoController extends Controller
@@ -81,5 +82,24 @@ class TodoController extends Controller
     public function destroy(Todo $todo)
     {
         //
+    }
+
+    public function getUserTodos(Request $request, TodoRepository $todoRepository)
+    {
+        try {
+            $user = $request->user();
+            \Log::alert($th);
+            $todos = $todoRepository->getAllByUser($user);
+            return response()->json([
+                'success' => true,
+                'data' => $todos,
+            ], 200);
+        } catch (\Throwable $th) {
+            \Log::alert($th);
+            return response()->json([
+                'success' => false,
+                'error' => $th,
+            ], 500);
+        }
     }
 }
