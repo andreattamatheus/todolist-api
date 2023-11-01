@@ -20,11 +20,10 @@ class TodoFactory extends Factory
     public function definition()
     {
         return [
-            'id' => $this->faker->Uuid(),
             'title' => $this->faker->sentence,
             'description' => $this->faker->sentence,
-            'project_id' => '2cc5e3a3-31d0-3b1a-ac7f-62f03e7c50a5',
-            'user_id' => '375defa7-54d9-49c3-9c71-18104d774963',
+            'project_id' => Project::all()->random()->id,
+            'user_id' => User::all()->random()->id,
         ];
     }
 }

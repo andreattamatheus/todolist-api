@@ -9,10 +9,9 @@ class UserRepository
 {
     protected $user = User::class;
 
-
-    public function getUserTodos($user): Collection
+    public function getUserTodos(): Collection
     {
-        return $this->user::where('email', $user->email)->first()->todos;
+        return $this->user::where('email', auth()->user()->email)->first()
+            ->todos()->orderBy('created_at', 'desc')->get();
     }
-
 }

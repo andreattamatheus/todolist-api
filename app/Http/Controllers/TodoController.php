@@ -2,76 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TodoStoreRequest;
 use App\Models\Todo;
 use App\Repositories\TodoRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Uuid;
 
 class TodoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TodoStoreRequest $request, TodoRepository $todoRepository)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Todo  $todo
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Todo $todo)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Todo  $todo
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Todo $todo)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Todo  $todo
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Todo $todo)
-    {
-        //
+        try {
+            $storeTodo = $todoRepository->store($request);
+            return response()->json([
+                'id' => $storeTodo->id,
+                'title' => $storeTodo->title,
+            ], 201);
+        } catch (\Throwable $th) {
+            \Log::alert($th);
+            return response()->json([
+                'success' => false,
+                'error' => $th,
+            ], 500);
+        }
     }
 
     /**
@@ -80,15 +40,27 @@ class TodoController extends Controller
      * @param  \App\Models\Todo  $todo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Todo $todo)
+    public function destroy(string $todoId, TodoRepository $todoRepository)
     {
-        //
+        try {
+            $todoRepository->destroy($todoId);
+            return response()->json([
+                'success' => true,
+                'message' => 'Todo deleted successfully',
+            ], 204);
+        } catch (\Throwable $th) {
+            \Log::alert($th);
+            return response()->json([
+                'success' => false,
+                'error' => $th,
+            ], 500);
+        }
     }
 
     public function getUserTodos(Request $request, UserRepository $userRepository)
     {
         try {
-            $getUserTodos = $userRepository->getUserTodos($request->user());
+            $getUserTodos = $userRepository->getUserTodos(auth()->user());
             return response()->json($getUserTodos, 200);
         } catch (\Throwable $th) {
             \Log::alert($th);

@@ -23,7 +23,8 @@ Route::prefix('v1')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('todos', [TodoController::class, 'getUserTodos']);
-        Route::post('me', [AuthController::class, 'me']);
+        Route::post('todos', [TodoController::class, 'store']);
+        Route::delete('/todos/{todo}', [TodoController::class, 'destroy']);
     });
 });
 

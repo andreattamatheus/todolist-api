@@ -17,7 +17,7 @@ class CreateTodosTable extends Migration
             $table->uuid('id')->primary();
             $table->string('title');
             $table->string('description')->nullable();
-            $table->foreignUuid('project_id')->constrained();
+            $table->foreignUuid('project_id')->constrained()->nullable();
             $table->foreignUuid('user_id')->constrained();
             $table->timestamps();
             $table->softDeletes('deleted_at', 0);
