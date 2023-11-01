@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Todo;
 use App\Repositories\TodoRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 
 class TodoController extends Controller
@@ -84,16 +85,11 @@ class TodoController extends Controller
         //
     }
 
-    public function getUserTodos(Request $request, TodoRepository $todoRepository)
+    public function getUserTodos(Request $request, UserRepository $userRepository)
     {
         try {
-            $user = $request->user();
-            \Log::alert($th);
-            $todos = $todoRepository->getAllByUser($user);
-            return response()->json([
-                'success' => true,
-                'data' => $todos,
-            ], 200);
+            $getUserTodos = $userRepository->getUserTodos($request->user());
+            return response()->json($getUserTodos, 200);
         } catch (\Throwable $th) {
             \Log::alert($th);
             return response()->json([
