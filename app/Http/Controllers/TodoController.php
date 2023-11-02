@@ -57,7 +57,30 @@ class TodoController extends Controller
         }
     }
 
-    public function getUserTodos(Request $request, UserRepository $userRepository)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Todo  $todo
+     * @return \Illuminate\Http\Response
+     */
+    public function update(TodoStoreRequest $request, TodoRepository $todoRepository)
+    {
+        try {
+            $todoRepository->update($request);
+            return response()->json([
+                'success' => true,
+                'message' => 'Todo update successfully',
+            ], 204);
+        } catch (\Throwable $th) {
+            \Log::alert($th);
+            return response()->json([
+                'success' => false,
+                'error' => $th,
+            ], 500);
+        }
+    }
+
+    public function getUserTodos(UserRepository $userRepository)
     {
         try {
             $getUserTodos = $userRepository->getUserTodos(auth()->user());
