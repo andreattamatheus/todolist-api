@@ -13,15 +13,15 @@ class TodoRepository
 {
     protected $todo = Todo::class;
 
-    public function store(Request $request)
+    public function store($user, $title)
     {
         DB::beginTransaction();
         $todo = $this->todo::create([
             'id' => Uuid::uuid4(),
-            'title' => $request->title,
+            'title' => $title,
             'description' => 'Generic description',
-            'user_id' => auth()->user()->id,
-            'project_id' => auth()->user()->projects->first()->id,
+            'user_id' => $user->id,
+            'project_id' => optional($user->projects->first())->id,
         ]);
         DB::commit();
         return $todo;
@@ -38,7 +38,7 @@ class TodoRepository
     }
 
     public function destroy(string $todoId)
-{
+    {
         return $this->todo::find($todoId)->delete();
     }
 }

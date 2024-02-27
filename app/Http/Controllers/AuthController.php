@@ -4,21 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthRegisterRequest;
 use App\Http\Requests\AuthLoginRequest;
-use App\Http\Resources\UserResource;
 use App\Models\User;
-use App\Services\AuthService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    private $userService;
-
-    public function __construct(UserService $userService)
+    public function __construct(private UserService $userService)
     {
-        $this->userService = $userService;
     }
 
     public function register(AuthRegisterRequest $request)
@@ -33,7 +26,6 @@ class AuthController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['error' => $th], 500);
         }
-
     }
 
     /**
@@ -82,5 +74,4 @@ class AuthController extends Controller
     {
         return $request->user();
     }
-
 }

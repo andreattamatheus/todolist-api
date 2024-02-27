@@ -3,14 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TodoStoreRequest;
+use App\Jobs\CreateTodo;
 use App\Models\Todo;
 use App\Repositories\TodoRepository;
 use App\Repositories\UserRepository;
-use Illuminate\Http\Request;
-use Ramsey\Uuid\Uuid;
+use App\Services\TodoService;
+use Illuminate\Http\Response;
 
 class TodoController extends Controller
 {
+    public function __construct(private TodoService $todoService)
+    {
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -20,11 +24,8 @@ class TodoController extends Controller
     public function store(TodoStoreRequest $request, TodoRepository $todoRepository)
     {
         try {
-            $storeTodo = $todoRepository->store($request);
-            return response()->json([
-                'id' => $storeTodo->id,
-                'title' => $storeTodo->title,
-            ], 201);
+            $this->todoService->store($todoRepository, $request);
+            return response()->json([], Response::HTTP_ACCEPTED);
         } catch (\Throwable $th) {
             \Log::alert($th);
             return response()->json([

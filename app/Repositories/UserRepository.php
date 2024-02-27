@@ -14,4 +14,10 @@ class UserRepository
         return $this->user::where('email', auth()->user()->email)->first()
             ->todos()->orderBy('created_at', 'desc')->get();
     }
+
+    public function getUserProjects(): Collection
+    {
+        return $this->user::where('email', auth()->user()->email)->first()
+            ->projects()->orderBy('created_at', 'desc')->get();
+    }
 }
