@@ -17,6 +17,7 @@ class CreateTodosTable extends Migration
             $table->uuid('id')->primary();
             $table->string('title');
             $table->string('description')->nullable();
+            $table->boolean('is_finish')->default(false);
             $table->foreignUuid('project_id')->constrained()->nullable();
             $table->foreignUuid('user_id')->constrained();
             $table->timestamps();
