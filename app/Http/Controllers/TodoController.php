@@ -8,24 +8,27 @@ use App\Models\Todo;
 use App\Repositories\TodoRepository;
 use App\Repositories\UserRepository;
 use App\Services\TodoService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class TodoController extends Controller
 {
-    public function __construct(private TodoService $todoService)
+    public function __construct(private readonly TodoService $todoService)
     {
     }
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return JsonResponse
      */
-    public function store(TodoStoreRequest $request, TodoRepository $todoRepository)
+    public function store(TodoStoreRequest $request, TodoRepository $todoRepository): ?JsonResponse
     {
         try {
             $this->todoService->store($todoRepository, $request);
-            return response()->json([], Response::HTTP_ACCEPTED);
+            return response()->json([], ResponseAlias::HTTP_ACCEPTED);
         } catch (\Throwable $th) {
             \Log::alert($th);
             return response()->json([
@@ -39,9 +42,9 @@ class TodoController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Todo  $todo
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function destroy(string $todoId, TodoRepository $todoRepository)
+    public function destroy(string $todoId, TodoRepository $todoRepository): JsonResponse
     {
         try {
             $todoRepository->destroy($todoId);
@@ -62,9 +65,9 @@ class TodoController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Todo  $todo
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function update(TodoStoreRequest $request, TodoRepository $todoRepository)
+    public function update(TodoStoreRequest $request, TodoRepository $todoRepository): ?JsonResponse
     {
         try {
             $todoRepository->update($request);
@@ -81,7 +84,7 @@ class TodoController extends Controller
         }
     }
 
-    public function getUserTodos(UserRepository $userRepository)
+    public function getUserTodos(UserRepository $userRepository): ?JsonResponse
     {
         try {
             $getUserTodos = $userRepository->getUserTodos(auth()->user());

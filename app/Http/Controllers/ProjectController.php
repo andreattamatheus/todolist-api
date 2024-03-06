@@ -6,7 +6,7 @@ use App\Repositories\UserRepository;
 
 class ProjectController extends Controller
 {
-    public function getUserProjects(UserRepository $userRepository)
+    public function getUserProjects(UserRepository $userRepository): ?\Illuminate\Http\JsonResponse
     {
         try {
             $getUserTodos = $userRepository->getUserProjects(auth()->user());

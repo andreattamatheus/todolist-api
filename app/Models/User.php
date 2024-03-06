@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -14,6 +15,7 @@ class User extends Authenticatable
     use HasApiTokens, SoftDeletes, HasFactory, Notifiable, Uuids;
 
     public $incrementing = false;
+    public mixed $email;
 
     protected $keyType = 'string';
 
@@ -47,12 +49,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function todos()
+    public function todos(): HasMany
     {
         return $this->hasMany(Todo::class);
     }
 
-    public function projects()
+    public function projects(): HasMany
     {
         return $this->hasMany(Project::class);
     }
